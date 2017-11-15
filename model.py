@@ -150,8 +150,7 @@ def _discriminator(inputShape):
     discriminatorModel.addReduceMean()
     discriminatorModel.addSigmoid()
     
-    return discriminatorModel.getOutput()
-     
+    return discriminatorModel.getOutput()     
     
 
 def createModels(inputShape):
@@ -160,5 +159,23 @@ def createModels(inputShape):
     print(gen)
     dis = _discriminator(inputShape)
     print(dis)
+    return gen, dis
+
+def createGenLoss(disOutput):
+    # This loss use only discriminator output,
+    # but discriminator receive difference of generated image and real image.
+    # This logic is hoped to create same image.
+
+    crossEntropy = tf.nn.sigmoid_cross_entropy_with_logits(disOutput, tf.ones_like(disOutput)
+    genLoss = tf.reduce_mean(crossEntropy, name="genLoss")
+    return genLoss
+
+def createDisLoss():
+    
+
+
+
+
+
 
 #createModels([100, 512, 512, 3])
