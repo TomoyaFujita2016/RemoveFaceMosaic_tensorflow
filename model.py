@@ -111,7 +111,7 @@ def _generator(inputShape):
     generatorModel = Model("generator", inputShape)
    
     # conv params
-    convUnits = [128, 256, 512, 1024]
+    convUnits = [64, 128, 256, 512]
     mapsize = 2
     stride = 2
     
@@ -120,7 +120,7 @@ def _generator(inputShape):
         generatorModel.addConv2d(unit, mapsize=mapsize, stride=stride, stddevFactor=1.0)
         generatorModel.addLeakyRelu(param=0.1)
    
-    convTransUnits = [1024, 712, 512, 256, 128]
+    convTransUnits = [1024, 512, 256, 128, 64]
     
     # conv transpose layers
     for unit in convTransUnits:
@@ -138,7 +138,7 @@ def _discriminator(inputShape):
     discriminatorModel = Model("discriminator", inputShape)
     
     # conv params
-    convUnits = [128, 256, 512, 1024, 2048, 4096]
+    convUnits = [32, 64, 128, 256, 512, 1024]
     mapsize = 2
     stride = 2
     
@@ -162,20 +162,27 @@ def createModels(inputShape):
     return gen, dis
 
 def createGenLoss(disOutput):
-    # This loss use only discriminator output,
+    # This loss function use only discriminator output,
     # but discriminator receive difference of generated image and real image.
     # This logic is hoped to create same image.
 
-    crossEntropy = tf.nn.sigmoid_cross_entropy_with_logits(disOutput, tf.ones_like(disOutput)
+    crossEntropy = tf.nn.sigmoid_cross_entropy_with_logits(disOutput, tf.ones_like(disOutput))
     genLoss = tf.reduce_mean(crossEntropy, name="genLoss")
     return genLoss
 
-def createDisLoss():
+def createDisLoss(disOutput, byReal=True):
+    crossEntropy = tf.nn.sigmoid_cross_entropy_with_logits(disOutput, int(byReal), name="disLoss")
+    return crossEntropy
     
+def createOptimizers(genLoss, disLoss):
+    
+    lr = tf.placeholder(dtype=tf.float32, name="learningRate")
+    genOpt = tf.train.AdamOptimizer(learning_rate=lr, name="genOptimizer").minimize(genLoss)
+    disOpt = tf.train.AdamOptimizer(learning_rate=lr, name="disOptimizer").minimize(disLoss)
+    
+    return genOpt, disOpt
 
 
 
 
-
-
-#createModels([100, 512, 512, 3])
+createModels([100, 512, 512, 3])
