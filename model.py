@@ -164,14 +164,15 @@ def createModels(inputShape):
 def createGenLoss(disOutput):
     # This loss function use only discriminator output,
     # but discriminator receive difference of generated image and real image.
-    # This logic is hoped to create same image.
+    # This logic is hoped to create same image as input one.
 
     crossEntropy = tf.nn.sigmoid_cross_entropy_with_logits(disOutput, tf.ones_like(disOutput))
     genLoss = tf.reduce_mean(crossEntropy, name="genLoss")
     return genLoss
 
-def createDisLoss(disOutput, byReal=True):
-    crossEntropy = tf.nn.sigmoid_cross_entropy_with_logits(disOutput, int(byReal), name="disLoss")
+def createDisLoss(disOutput):
+    labels = tf.placeholder(dtype=tf.float32, name="labels", shape=disOutput.get_shape())
+    crossEntropy = tf.nn.sigmoid_cross_entropy_with_logits(disOutput, labels, name="disLoss")
     return crossEntropy
     
 def createOptimizers(genLoss, disLoss):
@@ -185,4 +186,4 @@ def createOptimizers(genLoss, disLoss):
 
 
 
-createModels([100, 512, 512, 3])
+# createModels([100, 512, 512, 3])
