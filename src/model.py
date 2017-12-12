@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 
 FLAGS = tf.app.flags.FLAGS
-tf.app.flags.DEFINE_integer('batchSize', 100, "Number of samples per batch.")
+# tf.app.flags.DEFINE_integer('batchSize', 10, "Number of samples per batch.")
 
 class Model(object):
     def __init__(self, modelName, inputData):
@@ -88,7 +88,8 @@ class Model(object):
             weight = tf.get_variable('weight', initializer=elementsW)
             weight = tf.transpose(weight, perm=[0, 1, 3, 2])
             prevOutput = self.getOutput()
-            outputShape = [FLAGS.batchSize,
+            #outputShape = [FLAGS.batchSize,
+            outputShape = [int(prevOutput.get_shape()[0]),
                            int(prevOutput.get_shape()[1]) * stride,
                            int(prevOutput.get_shape()[2]) * stride,
                            outputUnits]
@@ -107,8 +108,7 @@ class Model(object):
 
 def _generator(inputData):
     # ex: inputShape = [FLAGS.batchSize, 512, 512, 3]
-    genera
-    torModel = Model("generator", inputData)
+    generatorModel = Model("generator", inputData)
     oldVars = tf.all_variables()
 
     # conv params
@@ -163,7 +163,7 @@ def _discriminator(inputData):
 
     return discriminatorModel.getOutput(), disVars
 
-def createModels(inputData, realData, testInputData, testInputData):
+def createModels(inputData, realData, testInputData):
     # real input for discriminator
     disRealInput = tf.identity(realData, name="disRealInput")
 
@@ -176,10 +176,11 @@ def createModels(inputData, realData, testInputData, testInputData):
     # discriminator with real data
     with tf.variable_scope("dis") as scope:
         # Instead of output diff loss, this only give discriminator it.
-        disModelReal, disVars = _discriminator(tf.subtract(disRealInput, inputData))
+        disModelReal, disVars = _discriminator(tf.sub(disRealInput, inputData))
         scope.reuse_variables()
-        disModelFake, _ = _discriminator(tf.subtract(genModel, inoutData))
+        disModelFake, _ = _discriminator(tf.sub(genModel, inputData))
         
+
     return genModel, disModelReal, disModelFake, genVars, disVars
 
 def createGenLoss(disOutput):
@@ -210,5 +211,7 @@ def createOptimizers(genLoss, disLoss, genVars, disVars):
     
     return genOpt, disOpt
 
-
-# createModels([100, 512, 512, 3])
+# For testing
+#real = tf.constant(0.1, shape=(500, 512, 512, 3))
+#test = tf.constant(0.3, shape=(10, 512, 512, 3))
+#createModels(real, real, test)
