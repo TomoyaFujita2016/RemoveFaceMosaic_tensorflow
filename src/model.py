@@ -112,7 +112,7 @@ def _generator(inputData):
     oldVars = tf.all_variables()
 
     # conv params
-    convUnits = [64, 128, 256, 512]
+    convUnits = [64, 128, 256]
     mapsize = 2
     stride = 2
     miniCnt = 0
@@ -121,18 +121,20 @@ def _generator(inputData):
     for unit in convUnits:
         if not generatorModel.getOutput().get_shape()[1] % mapsize == 0:
             stride = 5
-        else:
+        if stride == 5:
             miniCnt += 1
         generatorModel.addConv2d(unit, mapsize=mapsize, stride=stride, stddevFactor=1.0)
         generatorModel.addLeakyRelu(param=0.1)
         print(generatorModel.getOutput().get_shape())
   
     print("Trans")
-    convTransUnits = [1024, 512, 256, 128, 64]
+    convTransUnits = [512, 256, 128, 64]
     stride = 5
     # conv transpose layers
     for i, unit in enumerate(convTransUnits):
-        if not i < miniCnt:
+        if i < miniCnt:
+            stride = 5
+        else:
             stride = 2
         generatorModel.addBatchNorm()
         generatorModel.addConv2dTranspose(unit, mapsize=mapsize, stride=stride, stddevFactor=1.0)
@@ -226,6 +228,6 @@ def createOptimizers(genLoss, disLoss, genVars, disVars):
     return genOpt, disOpt
 
 # For testing
-real = tf.constant(0.1, shape=(183, 500, 500, 3))
-test = tf.constant(0.3, shape=(10, 500, 500, 3))
+real = tf.constant(0.1, shape=(183, 250, 250, 3))
+test = tf.constant(0.3, shape=(10, 250, 250, 3))
 print(createModels(real, real, test))
