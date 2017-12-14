@@ -115,23 +115,35 @@ def _generator(inputData):
     convUnits = [64, 128, 256, 512]
     mapsize = 2
     stride = 2
-    
+    miniCnt = 0
+
     # conv layers
     for unit in convUnits:
+        if not generatorModel.getOutput().get_shape()[1] % mapsize == 0:
+            stride = 5
+        else:
+            miniCnt += 1
         generatorModel.addConv2d(unit, mapsize=mapsize, stride=stride, stddevFactor=1.0)
         generatorModel.addLeakyRelu(param=0.1)
-   
+        print(generatorModel.getOutput().get_shape())
+  
+    print("Trans")
     convTransUnits = [1024, 512, 256, 128, 64]
-    
+    stride = 5
     # conv transpose layers
-    for unit in convTransUnits:
+    for i, unit in enumerate(convTransUnits):
+        if not i < miniCnt:
+            stride = 2
         generatorModel.addBatchNorm()
         generatorModel.addConv2dTranspose(unit, mapsize=mapsize, stride=stride, stddevFactor=1.0)
         generatorModel.addLeakyRelu(param=0.2)
-   
+        print(generatorModel.getOutput().get_shape())
+    
     # last layer
+    stride = 2
     generatorModel.addConv2d(3, mapsize=mapsize, stride=stride, stddevFactor=1.0)
     generatorModel.addSigmoid()
+    print(generatorModel.getOutput().get_shape())
 
     newVars = tf.all_variables()
 
@@ -165,14 +177,16 @@ def _discriminator(inputData):
 
 def createModels(inputData, realData, testInputData):
     # real input for discriminator
-    disRealInput = tf.identity(realData, name="disRealInput")
+    # disRealInput = tf.identity(realData, name="disRealInput")
+    disRealInput = realData
 
     # generator
     with tf.variable_scope("gen") as scope:
         genModel, genVars = _generator(inputData)
         scope.reuse_variables()
         genModelTest, _ = _generator(testInputData)
- 
+
+
     # discriminator with real data
     with tf.variable_scope("dis") as scope:
         # Instead of output diff loss, this only give discriminator it.
@@ -212,6 +226,6 @@ def createOptimizers(genLoss, disLoss, genVars, disVars):
     return genOpt, disOpt
 
 # For testing
-#real = tf.constant(0.1, shape=(500, 512, 512, 3))
-#test = tf.constant(0.3, shape=(10, 512, 512, 3))
-#createModels(real, real, test)
+real = tf.constant(0.1, shape=(183, 500, 500, 3))
+test = tf.constant(0.3, shape=(10, 500, 500, 3))
+print(createModels(real, real, test))

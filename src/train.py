@@ -3,19 +3,12 @@ import model
 
 FLAGS = tf.app.flags.FLAGS
 
-def trainModels():
+def trainModels(labelImages, mosaicImages, testLabel, testMosaic):
     sess = tf.Session()
-    saver = tf.train.Saver()
-    # inputShape = [FLAGS.batchSize, 512, 512, 3]
-    # inputImages = []
-    # trueImages = [batchSize, 512, 512, 3]
-    
-    # TODO setup input data 
-    # inputData = ??
-    # inputTestData = ??
+    # saver = tf.train.Saver()
 
     genModel, genTestModel, disModelReal, disModelFake, genVars, disVars = \
-        model.createModels(inputData, inputTestData)
+        model.createModels(mosaicImages, labelImages, mosaicImages)
     
     genLossFake = model.createGenLoss(disModelFake)
     disLossReal, disLossFake = model.createDisLoss(disModelReal, disModelFake)
