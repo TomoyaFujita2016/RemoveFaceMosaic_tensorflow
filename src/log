@@ -1,0 +1,65 @@
+I tensorflow/stream_executor/dso_loader.cc:111] successfully opened CUDA library libcublas.so locally
+I tensorflow/stream_executor/dso_loader.cc:111] successfully opened CUDA library libcudnn.so locally
+I tensorflow/stream_executor/dso_loader.cc:111] successfully opened CUDA library libcufft.so locally
+I tensorflow/stream_executor/dso_loader.cc:111] successfully opened CUDA library libcuda.so.1 locally
+I tensorflow/stream_executor/dso_loader.cc:111] successfully opened CUDA library libcurand.so locally
+Load Data from ../Dataset/LabelImages/:   0%|          | 0/118 [00:00<?, ?it/s]Load Data from ../Dataset/LabelImages/:  86%|████████▌ | 101/118 [00:00<00:00, 1007.77it/s]Load Data from ../Dataset/LabelImages/: 100%|██████████| 118/118 [00:00<00:00, 1006.03it/s]
+Load Data from ../Dataset/MosaicImages/:   0%|          | 0/118 [00:00<?, ?it/s]Load Data from ../Dataset/MosaicImages/:  91%|█████████ | 107/118 [00:00<00:00, 1061.47it/s]Load Data from ../Dataset/MosaicImages/: 100%|██████████| 118/118 [00:00<00:00, 1059.22it/s]
+Load Data from ../Dataset/TestLabel/:   0%|          | 0/20 [00:00<?, ?it/s]Load Data from ../Dataset/TestLabel/: 100%|██████████| 20/20 [00:00<00:00, 1102.37it/s]
+Load Data from ../Dataset/TestMosaic/:   0%|          | 0/20 [00:00<?, ?it/s]Load Data from ../Dataset/TestMosaic/: 100%|██████████| 20/20 [00:00<00:00, 1022.64it/s]I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:925] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:951] Found device 0 with properties: 
+name: GeForce GTX 770
+major: 3 minor: 0 memoryClockRate (GHz) 1.1105
+pciBusID 0000:01:00.0
+Total memory: 3.94GiB
+Free memory: 3.85GiB
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:972] DMA: 0 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] 0:   Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:1041] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX 770, pci bus id: 0000:01:00.0)
+
+Train Mode!
+ERROOOOR
+ERROOOOR
+Traceback (most recent call last):
+  File "/home/tomoya/.pyenv/versions/anaconda3-2.5.0/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 108, in _extract_stack
+    raise ZeroDivisionError
+ZeroDivisionError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "main.py", line 32, in <module>
+    tf.app.run()
+  File "/home/tomoya/.pyenv/versions/anaconda3-2.5.0/lib/python3.5/site-packages/tensorflow/python/platform/app.py", line 30, in run
+    sys.exit(main(sys.argv[:1] + flags_passthrough))
+  File "main.py", line 29, in main
+    training()
+  File "main.py", line 23, in training
+    train.trainModels(labelImages, mosaicImages, testLabel, testMosaic)
+  File "/home/tomoya/Github/RemoveFaceMosaic_tensorflow/src/train.py", line 11, in trainModels
+    model.createModels(mosaicImages, labelImages, mosaicImages)
+  File "/home/tomoya/Github/RemoveFaceMosaic_tensorflow/src/model.py", line 177, in createModels
+    genModelTest, _ = _generator(testInputData)
+  File "/home/tomoya/Github/RemoveFaceMosaic_tensorflow/src/model.py", line 129, in _generator
+    generatorModel.addConv2dTranspose(unit, mapsize=mapsize, stride=stride, stddevFactor=1.0)
+  File "/home/tomoya/Github/RemoveFaceMosaic_tensorflow/src/model.py", line 87, in addConv2dTranspose
+    elementsW = self._glorot_initializer_conv2d(inputUnits, outputUnits, mapsize, stddev_factor=stddevFactor)
+  File "/home/tomoya/Github/RemoveFaceMosaic_tensorflow/src/model.py", line 26, in _glorot_initializer_conv2d
+    return tf.truncated_normal([mapsize, mapsize, prev_units, num_units], mean=0.0, stddev=stddev)
+  File "/home/tomoya/.pyenv/versions/anaconda3-2.5.0/lib/python3.5/site-packages/tensorflow/python/ops/random_ops.py", line 176, in truncated_normal
+    mul = rnd * stddev_tensor
+  File "/home/tomoya/.pyenv/versions/anaconda3-2.5.0/lib/python3.5/site-packages/tensorflow/python/ops/math_ops.py", line 751, in binary_op_wrapper
+    return func(x, y, name=name)
+  File "/home/tomoya/.pyenv/versions/anaconda3-2.5.0/lib/python3.5/site-packages/tensorflow/python/ops/math_ops.py", line 910, in _mul_dispatch
+    return gen_math_ops.mul(x, y, name=name)
+  File "/home/tomoya/.pyenv/versions/anaconda3-2.5.0/lib/python3.5/site-packages/tensorflow/python/ops/gen_math_ops.py", line 1519, in mul
+    result = _op_def_lib.apply_op("Mul", x=x, y=y, name=name)
+  File "/home/tomoya/.pyenv/versions/anaconda3-2.5.0/lib/python3.5/site-packages/tensorflow/python/framework/op_def_library.py", line 749, in apply_op
+    op_def=op_def)
+  File "/home/tomoya/.pyenv/versions/anaconda3-2.5.0/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 2380, in create_op
+    original_op=self._default_original_op, op_def=op_def)
+  File "/home/tomoya/.pyenv/versions/anaconda3-2.5.0/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 1298, in __init__
+    self._traceback = _extract_stack()
+  File "/home/tomoya/.pyenv/versions/anaconda3-2.5.0/lib/python3.5/site-packages/tensorflow/python/framework/ops.py", line 110, in _extract_stack
+    f = sys.exc_info()[2].tb_frame.f_back
+KeyboardInterrupt

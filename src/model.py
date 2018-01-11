@@ -197,7 +197,7 @@ def createModels(inputData, realData, testInputData):
         disModelFake, _ = _discriminator(tf.sub(genModel, inputData))
         
 
-    return genModel, disModelReal, disModelFake, genVars, disVars
+    return genModel, genModelTest, disModelReal, disModelFake, genVars, disVars
 
 def createGenLoss(disOutput):
     # This loss function use only discriminator output,
@@ -214,20 +214,20 @@ def createDisLoss(disOutputTrue, disOutputFake):
     disLossTrue = tf.reduce_mean(crossEntropyTrue, name="disLossTrue")
 
     crossEntropyFake = tf.nn.sigmoid_cross_entropy_with_logits(disOutputFake, tf.zeros_like(disOutputFake))
-    dissLossFake = tf.reduce_mean(crossEntropyFake, name="disLossFake")
+    disLossFake = tf.reduce_mean(crossEntropyFake, name="disLossFake")
 
     return disLossTrue, disLossFake
     
 def createOptimizers(genLoss, disLoss, genVars, disVars):
     globalStep = tf.Variable(0, dtype=tf.int64,   trainable=False, name='global_step')
-    lr = tf.placeholder(dtype=tf.float32, name="learningRate")
-    
+    #lr = tf.placeholder(dtype=tf.float32, name="learningRate")
+    lr = 0.0001
     genOpt = tf.train.AdamOptimizer(learning_rate=lr, name="genOptimizer").minimize(genLoss, var_list=genVars, global_step=globalStep)
     disOpt = tf.train.AdamOptimizer(learning_rate=lr, name="disOptimizer").minimize(disLoss, var_list=disVars, global_step=globalStep)
     
     return genOpt, disOpt
 
 # For testing
-real = tf.constant(0.1, shape=(183, 250, 250, 3))
-test = tf.constant(0.3, shape=(10, 250, 250, 3))
-print(createModels(real, real, test))
+#real = tf.constant(0.1, shape=(183, 250, 250, 3))
+#test = tf.constant(0.3, shape=(10, 250, 250, 3))
+#print(createModels(real, real, test))

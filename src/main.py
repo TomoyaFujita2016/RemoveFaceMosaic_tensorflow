@@ -16,6 +16,7 @@ tf.app.flags.DEFINE_float('lrStart', 0.0002, "First learning rate")
 tf.app.flags.DEFINE_integer('lrHalfPointEp', 5000, "Number of epoch which changes learning rate")
 tf.app.flags.DEFINE_integer('displaySpan', 5, "The span which is displayed some training data")
 tf.app.flags.DEFINE_integer('saveSpan', 10, "The span which is saved training data")
+tf.app.flags.DEFINE_integer('epochLimit', 50000, "Epoch limit")
 
 def training():
     labelImages, mosaicImages = inputs.setupInputdata(FLAGS.mosaicImageDir, FLAGS.labelImageDir)
