@@ -5,7 +5,7 @@ FLAGS = tf.app.flags.FLAGS
 
 def trainModels(labelImages, mosaicImages, testLabel, testMosaic):
     sess = tf.Session()
-    saver = tf.train.Saver()
+    #saver = tf.train.Saver()
 
     genModel, genTestModel, disModelReal, disModelFake, genVars, disVars = \
         model.createModels(mosaicImages, labelImages, mosaicImages)
@@ -28,5 +28,5 @@ def trainModels(labelImages, mosaicImages, testLabel, testMosaic):
             #print("Epoch:[%3d / %3d], GenLoss:[%3.3f], DisLossR:[%3.3f], DisLossF:[%3.3f]") % (epoch, FLAGS.epochLimit, gLossVal, dLossRVal, dLossFVal)
         if epoch % FLAGS.lrHalfPointEp == 0:
             lr *= 0.5
-        if epoch % FLAGS.saveSpan == 0:
-            saver.save(sess, "../checkpoints/model.ckpt", global_step=epoch)
+        #if epoch % FLAGS.saveSpan == 0:
+            #saver.save(sess, "../checkpoints/model.ckpt", global_step=epoch)

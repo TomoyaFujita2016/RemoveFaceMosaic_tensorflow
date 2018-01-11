@@ -18,6 +18,7 @@ def inputImages(imageDir):
         img = img.astype(np.float32)/255.0
         trainImages.append(img)
     imagesNumpy = np.asarray(trainImages)
+    #return imagesNumpy
     imageTensors = tf.Variable(imagesNumpy)
     return imageTensors
 
