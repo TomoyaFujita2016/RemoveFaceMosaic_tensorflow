@@ -2,9 +2,30 @@ import tensorflow as tf
 import numpy as np
 import cv2
 import os
+import glob
 from tqdm import tqdm
 
 FLAGS = tf.app.flags.FLAGS
+
+
+def setupInputdata(mosaicImageDir, labelImageDir):
+    labelImages = inputImages(labelImageDir)
+    mosaicImages = inputImages(mosaicImageDir)
+    generateCsv(mosaicImageDir)
+    return labelImages, mosaicImages
+
+def generateCsv(dirPath):
+    if dirPath[-1] == "/":
+        path = dirPath + "*"
+    else:
+        path = dirPath + "/*"
+    
+    fileList = glob.glob(path)
+    fileName = "".join(list(filter(lambda s:s!="",dirPath.split("/")))[-1]) + ".csv"
+
+    with open(FLAGS.csvDir + fileName, "w") as f:
+        for fl in fileList:
+            f.write(fl+"\n")
 
 def inputImages(imageDir):
     trainImages = []
@@ -21,9 +42,3 @@ def inputImages(imageDir):
     #return imagesNumpy
     imageTensors = tf.Variable(imagesNumpy)
     return imageTensors
-
-def setupInputdata(mosaicImageDir, labelImageDir):
-    labelImages = inputImages(labelImageDir)
-    mosaicImages = inputImages(mosaicImageDir)
-
-    return labelImages, mosaicImages
